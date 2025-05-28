@@ -5,7 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2f079e38-6250-4c08-9713-26124ba33b49" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/recipes/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/recipes/[id].tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/constants/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/constants/config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/services/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/services/api.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,7 +79,7 @@
       <workItem from="1747901682212" duration="1054000" />
       <workItem from="1747902807901" duration="4846000" />
       <workItem from="1748373165355" duration="1029000" />
-      <workItem from="1748460040518" duration="705000" />
+      <workItem from="1748460040518" duration="2641000" />
     </task>
     <servers />
   </component>
