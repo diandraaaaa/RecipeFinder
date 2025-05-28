@@ -1,0 +1,52 @@
+{
+  "expo": {
+    "name": "RecipeFinder",
+    "slug": "RecipeFinder",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/logo.png",
+    "scheme": "recipefinder",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#f59e0b"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/logo.png",
+        "backgroundColor": "#f59e0b"
+      },
+      "edgeToEdgeEnabled": true,
+      "splash": {
+        "ldpi": "./assets/images/logo.png",
+        "mdpi": "./assets/images/logo.png",
+        "hdpi": "./assets/images/logo.png",
+        "xhdpi": "./assets/images/logo.png",
+        "xxhdpi": "./assets/images/logo.png",
+        "xxxhdpi": "./assets/images/logo.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#f59e0b"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/logo.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-splash-screen"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "BACKEND_URL": "http://192.168.1.9:8000"
+    }
+  }
+}

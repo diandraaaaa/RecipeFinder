@@ -1,0 +1,19 @@
+# Python
+*.pyc
+__pycache__/
+.venv/
+.env
+
+# Node/React Native
+node_modules/
+.expo/
+.expo-shared/
+
+# Big model/data files
+*.pth
+*.pkl
+backend/data/cleaned_recipes.csv
+
+# Misc
+.DS_Store
+*.log

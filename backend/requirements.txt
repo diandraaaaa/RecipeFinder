@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pandas
+torch
+scikit-learn
+joblib
+python-multipart
+aiofiles
+python-dotenv
