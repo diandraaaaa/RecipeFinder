@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from model.recommender import IngredientRecommender
 
@@ -22,6 +22,14 @@ recommender = IngredientRecommender(
 @app.get("/recipes")
 def list_recipes():
     return recommender.recipes[:50]
+
+@app.get("/recipes/{id}")
+def get_recipe(id: int):
+    for recipe in recommender.recipes:
+        if recipe.get("id") == id:
+            return recipe
+    raise HTTPException(status_code=404, detail="Recipe not found")
+
 
 @app.post("/recommend")
 async def get_recommendation(request: Request):

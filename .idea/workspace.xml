@@ -6,10 +6,17 @@
   <component name="ChangeListManager">
     <list default="true" id="2f079e38-6250-4c08-9713-26124ba33b49" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/recipes/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/recipes/[id].tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/constants/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/constants/config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/services/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/services/api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/(tabs)/favorites.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/(tabs)/favorites.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/(tabs)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/(tabs)/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/(tabs)/profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/(tabs)/profile.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/(tabs)/search.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/(tabs)/search.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/assets/icons/logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/assets/icons/logo.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/components/RecipeCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/components/RecipeCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/components/SearchBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/components/SearchBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/components/TrendingCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/components/TrendingCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/constants/images.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/constants/images.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,6 +25,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
@@ -30,27 +40,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Node.js...js.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/Diandra/Licenta/RecipeFinder",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "prettierjs.PrettierConfiguration.Package": "C:\\Users\\Diandra\\Licenta\\RecipeFinder\\frontend\\my-expo-app\\node_modules\\prettier",
-    "settings.editor.selected.configurable": "Settings.JavaScript",
-    "ts.external.directory.path": "C:\\Users\\Diandra\\Licenta\\RecipeFinder\\frontend\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Node.js...js.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Diandra/Licenta/RecipeFinder&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;C:\\Users\\Diandra\\Licenta\\RecipeFinder\\frontend\\my-expo-app\\node_modules\\prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;Settings.JavaScript&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Diandra\\Licenta\\RecipeFinder\\frontend\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Diandra\Licenta\RecipeFinder\frontend" />
@@ -79,7 +89,9 @@
       <workItem from="1747901682212" duration="1054000" />
       <workItem from="1747902807901" duration="4846000" />
       <workItem from="1748373165355" duration="1029000" />
-      <workItem from="1748460040518" duration="2641000" />
+      <workItem from="1748460040518" duration="3267000" />
+      <workItem from="1748531979839" duration="1414000" />
+      <workItem from="1748590272793" duration="5588000" />
     </task>
     <servers />
   </component>

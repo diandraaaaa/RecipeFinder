@@ -28,11 +28,11 @@ const TrendingRecipeCard = ({ recipe, index }: TrendingRecipeCardProps) => {
                             <Text className="font-bold text-white text-6xl">{index + 1}</Text>
                         }
                     >
-                        <Image
-                            source={require("@/assets/images/ranking-gradient.png")} // Update this path if needed
-                            className="w-14 h-14"
-                            resizeMode="cover"
-                        />
+                        {/*<Image*/}
+                        {/*    source={require("@/assets/images/ranking-gradient.png")} // Update this path if needed*/}
+                        {/*    className="w-14 h-14"*/}
+                        {/*    resizeMode="cover"*/}
+                        {/*/>*/}
                     </MaskedView>
                 </View>
 

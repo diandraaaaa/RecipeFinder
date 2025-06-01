@@ -2,101 +2,82 @@
 import {
     View,
     Text,
-    Image,
     FlatList,
-    ScrollView,
     ActivityIndicator,
+    ScrollView,
+    SafeAreaView,
 } from 'react-native';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'expo-router'; // ← for navigation
 
 import { fetchRecipes } from '@/services/api';
-import { icons } from '@/constants/icons';
-import { images } from '@/constants/images';
-
 import SearchBar from '@/components/SearchBar';
 import RecipeCard from '@/components/RecipeCard';
-import {Recipe} from "@/interfaces/interfaces";
+import { Recipe } from '@/interfaces/interfaces';
 
 const Home = () => {
+    const router = useRouter();
     const [recipes, setRecipes] = useState<Recipe[]>([]);
-    const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>([]);
     const [search, setSearch] = useState('');
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const loadRecipes = async () => {
-            try {
-                const data = await fetchRecipes();
-                setRecipes(data);
-                setFilteredRecipes(data);
-            } catch (err: any) {
-                setError(err.message || 'Failed to load recipes');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        loadRecipes();
+        (async () => {
+            const data = await fetchRecipes();
+            setRecipes(data);
+            setLoading(false);
+        })();
     }, []);
 
-    useEffect(() => {
-        if (!search.trim()) {
-            setFilteredRecipes(recipes);
-        } else {
-            const filtered = recipes.filter((r) =>
-                r.name.toLowerCase().includes(search.toLowerCase())
-            );
-            setFilteredRecipes(filtered);
-        }
-    }, [search, recipes]);
+    const filtered = recipes.filter((r) =>
+        !search.trim() || r.name.toLowerCase().includes(search.toLowerCase())
+    );
 
     return (
-        <View className="flex-1 bg-primary">
-            <Image
-                source={images.bg}
-                className="absolute w-full z-0"
-                resizeMode="cover"
-            />
-
+        <SafeAreaView className="flex-1 bg-white">
             <ScrollView
-                className="flex-1 px-5"
+                className="flex-1 px-6"
                 showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ minHeight: '100%', paddingBottom: 10 }}
+                contentContainerStyle={{ paddingBottom: 24 }}
             >
-                <Image source={icons.logo} className="w-12 h-10 mt-20 mb-5 mx-auto" />
+                {/* — Tagline Section — */}
+                <View className="mt-8">
+                    <Text className="text-5xl font-extrabold text-black">Cooking</Text>
+                    <Text className="text-4xl font-extrabold text-gray-400 -mt-1">
+                        Delicious Like a Chef
+                    </Text>
+                </View>
 
-                <SearchBar
-                    placeholder="Search for a recipe"
-                    value={search}
-                    onChangeText={(text) => setSearch(text)}
-                />
+                {/* — Search Bar: tapping pushes to "/search" — */}
+                <View className="mt-6">
+                    <SearchBar
+                        placeholder="Search Food, groceries, drink, etc."
+                        value={search}
+                        onChangeText={setSearch}
+                        onPress={() => router.push('/search')}
+                    />
+                </View>
 
+                {/* — “Popular Now” Header — */}
+                <Text className="text-lg font-bold text-black mt-8 mb-4">
+                    Popular Now
+                </Text>
+
+                {/* — Recipe Grid — */}
                 {loading ? (
-                    <ActivityIndicator size="large" color="#FF8C42" className="mt-10" />
-                ) : error ? (
-                    <Text className="text-red-400 mt-10 text-center">{error}</Text>
+                    <ActivityIndicator size="large" color="#111" className="mt-12" />
                 ) : (
-                    <>
-                        <Text className="text-lg text-white font-bold mt-5 mb-3">
-                            Recipes
-                        </Text>
-
-                        <FlatList
-                            data={filteredRecipes}
-                            renderItem={({ item }) => <RecipeCard {...item} />}
-                            keyExtractor={(item) => item.id.toString()}
-                            numColumns={2}
-                            columnWrapperStyle={{
-                                justifyContent: 'space-between',
-                            }}
-                            className="pb-32"
-                            scrollEnabled={false}
-                        />
-                    </>
+                    <FlatList
+                        data={filtered}
+                        renderItem={({ item }) => <RecipeCard {...item} />}
+                        keyExtractor={(item) => item.id.toString()}
+                        numColumns={2}
+                        columnWrapperStyle={{ justifyContent: 'space-between' }}
+                        scrollEnabled={false}
+                    />
                 )}
             </ScrollView>
-        </View>
+        </SafeAreaView>
     );
 };
 
