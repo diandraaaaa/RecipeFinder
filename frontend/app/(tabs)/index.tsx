@@ -6,11 +6,14 @@ import {
     ActivityIndicator,
     ScrollView,
     SafeAreaView,
+    TouchableOpacity,
+    Image,
 } from 'react-native';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router'; // ← for navigation
+import { Feather } from '@expo/vector-icons';
 
-import { fetchRecipes } from '@/services/api';
+import { fetchRecipes, fetchRecommendations } from '@/services/api';
 import SearchBar from '@/components/SearchBar';
 import RecipeCard from '@/components/RecipeCard';
 import { Recipe } from '@/interfaces/interfaces';
@@ -29,9 +32,16 @@ const Home = () => {
         })();
     }, []);
 
-    const filtered = recipes.filter((r) =>
-        !search.trim() || r.name.toLowerCase().includes(search.toLowerCase())
-    );
+    // Call recommendations API every time search changes
+    useEffect(() => {
+        if (!search.trim()) return;
+        const ingredients = search.split(/[, ]+/).map(s => s.trim()).filter(Boolean);
+        setLoading(true);
+        fetchRecommendations(ingredients)
+            .then(data => setRecipes(data))
+            .catch(() => setRecipes([]))
+            .finally(() => setLoading(false));
+    }, [search]);
 
     return (
         <SafeAreaView className="flex-1 bg-white">
@@ -40,35 +50,68 @@ const Home = () => {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 24 }}
             >
-                {/* — Tagline Section — */}
-                <View className="mt-8">
-                    <Text className="text-5xl font-extrabold text-black">Cooking</Text>
-                    <Text className="text-4xl font-extrabold text-gray-400 -mt-1">
-                        Delicious Like a Chef
-                    </Text>
+                {/* Header */}
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 18 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Image
+                            source={{ uri: 'https://randomuser.me/api/portraits/women/44.jpg' }}
+                            style={{ width: 38, height: 38, borderRadius: 19, marginRight: 10 }}
+                        />
+                        <View>
+                            <Text style={{ color: '#888', fontSize: 13 }}>Hello, Teresa!</Text>
+                        </View>
+                    </View>
+                    <TouchableOpacity>
+                        <Feather name="bell" size={24} color="#222" />
+                    </TouchableOpacity>
                 </View>
 
-                {/* — Search Bar: tapping pushes to "/search" — */}
+                {/* Title */}
+                <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#111', marginTop: 18, lineHeight: 30 }}>
+                    Reduce food waste,{"\n"} cook smart at{" "}
+                    <Text style={{ color: '#4caf50', fontWeight: 'bold' }}>home</Text>
+                </Text>
+
+                {/* Search Bar */}
                 <View className="mt-6">
                     <SearchBar
-                        placeholder="Search Food, groceries, drink, etc."
+                        placeholder="Search recipes"
                         value={search}
                         onChangeText={setSearch}
-                        onPress={() => router.push('/search')}
                     />
                 </View>
 
-                {/* — “Popular Now” Header — */}
-                <Text className="text-lg font-bold text-black mt-8 mb-4">
-                    Popular Now
+                {/* Category Selector */}
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 24 }}>
+                    {['Popular', 'Western', 'Drinks', 'Local', 'Dessert'].map((cat, idx) => (
+                        <TouchableOpacity
+                            key={cat}
+                            style={{
+                                backgroundColor: idx === 0 ? '#111' : '#fff',
+                                borderRadius: 18,
+                                paddingVertical: 8,
+                                paddingHorizontal: 18,
+                                marginRight: 12,
+                                borderWidth: 1,
+                                borderColor: '#eee',
+                            }}
+                        >
+                            <Text style={{ color: idx === 0 ? '#fff' : '#111', fontWeight: 'bold', fontSize: 15 }}>{cat}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </ScrollView>
+
+                {/* Section Title */}
+                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#222', marginTop: 32, marginBottom: 12 }}>
+                    Popular Recipes
                 </Text>
 
-                {/* — Recipe Grid — */}
+                {/* Recipe Grid */}
                 {loading ? (
                     <ActivityIndicator size="large" color="#111" className="mt-12" />
                 ) : (
                     <FlatList
-                        data={filtered}
+                        data={recipes}
                         renderItem={({ item }) => <RecipeCard {...item} />}
                         keyExtractor={(item) => item.id.toString()}
                         numColumns={2}

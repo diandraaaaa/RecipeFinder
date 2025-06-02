@@ -6,6 +6,8 @@ export interface Recipe {
     name: string;
     minutes: number;
     score?: number; // optional, e.g., for recommendations
+    ingredients?: string[];
+    instructions?: string;
 }
 
 // Recipe shown in trending or analytics (if implemented)

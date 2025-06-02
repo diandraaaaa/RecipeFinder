@@ -1,172 +1,84 @@
-// app/search/index.tsx
-import {
-    View,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    ScrollView,
-    SafeAreaView,
-} from 'react-native';
-import { useState, useMemo } from 'react';
-import { useRouter } from 'expo-router';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, ActivityIndicator, SafeAreaView, TouchableOpacity, Image } from 'react-native';
+import { Feather } from '@expo/vector-icons';
+import SearchBar from '@/components/SearchBar';
+import RecipeCard from '@/components/RecipeCard';
+import { Recipe } from '@/interfaces/interfaces';
+import { fetchRecommendations } from '@/services/api';
 
-const POPULAR_INGREDIENTS = [
-    'Chicken',
-    'Egg',
-    'Pasta',
-    'Rice',
-    'Beef Mince',
-    'Broccoli',
-    'Tofu',
-    'Salmon',
-    'Spinach',
-    'Milk',
-    'Quinoa',
-    'Canned Tomato',
-    'Pork',
-    'Beef',
-    'Lamb',
-    'Mushroom',
-    'Potato',
-    'Tomato',
-    'Onion',
-    'Garlic',
-    // …you can add more strings here as needed
-];
+const SearchPage = () => {
+    const [ingredients, setIngredients] = useState('');
+    const [recipes, setRecipes] = useState<Recipe[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-export default function SearchByIngredients() {
-    const router = useRouter();
-    const [query, setQuery] = useState('');
-    const [selected, setSelected] = useState<string[]>([]);
-
-    // Filter POPULAR list by query
-    const filteredList = useMemo(() => {
-        if (!query.trim()) return POPULAR_INGREDIENTS;
-        return POPULAR_INGREDIENTS.filter((ing) =>
-            ing.toLowerCase().includes(query.toLowerCase())
-        );
-    }, [query]);
-
-    const toggleSelect = (item: string) => {
-        setSelected((prev) =>
-            prev.includes(item) ? prev.filter((x) => x !== item) : [...prev, item]
-        );
-    };
-
-    const clearAll = () => setSelected([]);
+    useEffect(() => {
+        if (!ingredients.trim()) {
+            setRecipes([]);
+            return;
+        }
+        const handler = setTimeout(() => {
+            const ingredientList = ingredients.split(/[, ]+/).map(item => item.trim()).filter(Boolean);
+            setLoading(true);
+            setError(null);
+            fetchRecommendations(ingredientList)
+                .then(data => setRecipes(data))
+                .catch(err => setError(err.message || 'Failed to fetch recommendations'))
+                .finally(() => setLoading(false));
+        }, 500);
+        return () => clearTimeout(handler);
+    }, [ingredients]);
 
     return (
-        <SafeAreaView className="flex-1 bg-white">
-            {/* — Top Bar with “Back” button — */}
-            <View className="flex-row items-center px-4 py-2 border-b border-gray-200">
-                <TouchableOpacity
-                    className="p-2"
-                    activeOpacity={0.6}
-                    onPress={() => router.back()}
-                >
-                    <Text className="text-2xl text-black">←</Text>
-                </TouchableOpacity>
-                <Text className="text-xl font-bold text-black ml-2">
-                    Search by ingredients
-                </Text>
-            </View>
-
-            {/* — Search Input */}
-            <View className="px-4 py-3 border-b border-gray-200">
-                <TextInput
-                    className="bg-gray-100 rounded-full px-4 py-2 text-black text-base"
-                    placeholder="What’s in your pantry?"
-                    placeholderTextColor="#666"
-                    value={query}
-                    onChangeText={setQuery}
-                />
-            </View>
-
-            {/* — Selected Row — */}
-            {selected.length > 0 && (
-                <View className="px-4 py-3">
-                    <View className="flex-row justify-between items-center">
-                        <Text className="text-gray-800 font-medium">Selected</Text>
-                        <TouchableOpacity activeOpacity={0.6} onPress={clearAll}>
-                            <Text className="text-blue-600 font-medium">Clear all</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        className="mt-2"
-                    >
-                        {selected.map((item) => (
-                            <View
-                                key={item}
-                                className="flex-row items-center bg-gray-100 rounded-full px-3 py-1 mr-2"
-                            >
-                                <Text className="text-gray-800 text-sm">{item}</Text>
-                                <TouchableOpacity
-                                    onPress={() => toggleSelect(item)}
-                                    className="ml-2"
-                                >
-                                    <Text className="text-gray-500 font-bold">×</Text>
-                                </TouchableOpacity>
-                            </View>
-                        ))}
-                    </ScrollView>
-                </View>
-            )}
-
-            {/* — Scrollable “Popular” Grid — */}
-            <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
-                <Text className="text-gray-800 font-medium text-lg mb-3">
-                    Popular
-                </Text>
-
-                <View className="flex-row flex-wrap justify-between">
-                    {filteredList.map((item) => {
-                        const isSelected = selected.includes(item);
-                        return (
-                            <TouchableOpacity
-                                key={item}
-                                onPress={() => toggleSelect(item)}
-                                activeOpacity={0.7}
-                                className="w-1/3 mb-6 items-center"
-                            >
-                                {/* — Placeholder circle: if selected, dark border, else light border — */}
-                                <View
-                                    className={`w-16 h-16 rounded-full justify-center items-center border ${
-                                        isSelected ? 'border-black' : 'border-gray-300'
-                                    }`}
-                                >
-                                    {/* We use the first letter of the ingredient as a stand‐in “icon” */}
-                                    <Text className="text-xl font-semibold text-gray-800">
-                                        {item.charAt(0)}
-                                    </Text>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+            <FlatList
+                ListHeaderComponent={
+                    <>
+                        {/* Header */}
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 18 }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Image
+                                    source={{ uri: 'https://randomuser.me/api/portraits/women/44.jpg' }}
+                                    style={{ width: 38, height: 38, borderRadius: 19, marginRight: 10 }}
+                                />
+                                <View>
+                                    <Text style={{ color: '#888', fontSize: 13 }}>Hello, Teresa!</Text>
                                 </View>
-                                <Text
-                                    className={`mt-2 text-center text-sm ${
-                                        isSelected ? 'text-black font-medium' : 'text-gray-500'
-                                    }`}
-                                    numberOfLines={2}
-                                >
-                                    {item}
-                                </Text>
+                            </View>
+                            <TouchableOpacity>
+                                <Feather name="bell" size={24} color="#222" />
                             </TouchableOpacity>
-                        );
-                    })}
-                </View>
-            </ScrollView>
-
-            {/* — “Apply” Button stuck to the bottom — */}
-            <TouchableOpacity
-                onPress={() => {
-                    // You can read `selected` here and call your backend / pass back to Home etc.
-                    // For now, just console.warn or dismiss:
-                    console.log('Chosen ingredients →', selected);
-                    router.back();
-                }}
-                className="bg-black py-4 items-center justify-center"
-            >
-                <Text className="text-white font-bold text-base">Apply</Text>
-            </TouchableOpacity>
+                        </View>
+                        {/* Tagline */}
+                        <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#111', marginTop: 18, lineHeight: 30 }}>
+                            Find recipes by ingredients
+                        </Text>
+                        {/* Search Bar */}
+                        <View style={{ marginTop: 24 }}>
+                            <SearchBar
+                                placeholder="Add ingredients (comma or space separated)"
+                                value={ingredients}
+                                onChangeText={setIngredients}
+                            />
+                        </View>
+                        {/* Section Title */}
+                        <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#222', marginTop: 32, marginBottom: 12 }}>
+                            Recommended Recipes
+                        </Text>
+                        {loading && <ActivityIndicator size="large" color="#111" style={{ marginTop: 40 }} />}
+                        {error && <Text style={{ color: '#e57373', marginTop: 40, textAlign: 'center' }}>{error}</Text>}
+                    </>
+                }
+                data={recipes}
+                renderItem={({ item }) => <RecipeCard {...item} />}
+                keyExtractor={(item) => item.id.toString()}
+                numColumns={2}
+                columnWrapperStyle={{ justifyContent: 'space-between' }}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 24 }}
+            />
         </SafeAreaView>
     );
-}
+};
+
+export default SearchPage;

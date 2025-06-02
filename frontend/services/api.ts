@@ -47,3 +47,8 @@ export const fetchRecommendations = async (ingredients: string[]) => {
         throw error;
     }
 };
+export const fetchRecipe = async (id: number) => {
+    const response = await fetch(`${BACKEND_URL}/recipes/${id}`);
+    if (!response.ok) throw new Error("Recipe not found");
+    return await response.json();
+};

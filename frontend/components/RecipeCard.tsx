@@ -13,7 +13,7 @@ interface RecipeCardProps {
 
 const RecipeCard = ({ id, name, minutes, score, ingredients, servings }: RecipeCardProps) => {
     const sanitizedName = name.replace(/[^a-zA-Z0-9 ]/g, "");
-    const imgUrl =`https://via.placeholder.com/600x400.png?text=${encodeURIComponent(name)}`;
+    const imgUrl = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80";
 
     return (
         <Link href={`/recipes/${id}`} asChild>
