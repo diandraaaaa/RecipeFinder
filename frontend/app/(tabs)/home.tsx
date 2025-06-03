@@ -1,4 +1,4 @@
-// app/index.tsx
+// app/home.tsx
 import {
     View,
     Text,

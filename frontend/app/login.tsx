@@ -19,7 +19,7 @@ export default function LoginScreen() {
     // Allow any email and password for now
     setSuccess('Login successful!');
     setTimeout(() => {
-      router.replace('/(tabs)');
+      router.replace('/(tabs)/home');
     }, 600);
   };
 

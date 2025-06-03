@@ -5,26 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2f079e38-6250-4c08-9713-26124ba33b49" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/hello.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/app/(tabs)/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/(tabs)/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/(tabs)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/(tabs)/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/(tabs)/profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/(tabs)/profile.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/(tabs)/search.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/(tabs)/search.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/recipes/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/recipes/[id].tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/components/RecipeCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/components/RecipeCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/components/SearchBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/components/SearchBar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/interfaces/interfaces.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/interfaces/interfaces.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/metro.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/metro.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/services/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/services/api.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tailwind.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/(tabs)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/(tabs)/home.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,6 +16,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/frontend/package.json" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
@@ -71,6 +57,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Diandra\Licenta\RecipeFinder\frontend\app\(tabs)" />
       <recent name="C:\Users\Diandra\Licenta\RecipeFinder\frontend" />
       <recent name="C:\Users\Diandra\Licenta\RecipeFinder\app\(tabs)" />
     </key>
