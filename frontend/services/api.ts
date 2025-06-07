@@ -1,14 +1,19 @@
-// frontend/services/api.ts
 import { BACKEND_URL } from '@/constants/config';
 
-export const fetchRecipes = async () => {
-    console.log("📡 Fetching from:", BACKEND_URL);
+export const fetchRecipes = async (params: Record<string, string> = {}) => {
+    // Build URL with query params if provided
+    const url = new URL(`${BACKEND_URL}/recipes`);
+    Object.entries(params).forEach(([key, val]) => {
+        if (val) url.searchParams.append(key, val);
+    });
+
+    console.log("📡 Fetching from:", url.toString());
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 5000); // 5-second timeout
 
     try {
-        const response = await fetch(`${BACKEND_URL}/recipes`, {
+        const response = await fetch(url.toString(), {
             signal: controller.signal,
         });
         clearTimeout(timeout);

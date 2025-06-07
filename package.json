@@ -2,6 +2,7 @@
   "dependencies": {
     "expo-constants": "^17.1.6",
     "expo-linear-gradient": "^14.1.4",
+    "firebase": "^11.9.0",
     "nativewind": "^4.1.23"
   }
 }

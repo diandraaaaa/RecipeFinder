@@ -9,9 +9,10 @@ interface RecipeCardProps {
     score?: number;
     ingredients?: string[];
     servings?: number;
+    category?: string;
 }
 
-const RecipeCard = ({ id, name, minutes, score, ingredients, servings }: RecipeCardProps) => {
+const RecipeCard = ({ id, name, minutes, score, ingredients, servings, category }: RecipeCardProps) => {
     const sanitizedName = name.replace(/[^a-zA-Z0-9 ]/g, "");
     const imgUrl = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80";
 
@@ -52,6 +53,11 @@ const RecipeCard = ({ id, name, minutes, score, ingredients, servings }: RecipeC
                     >
                         {name}
                     </Text>
+                    {category && (
+                        <Text style={{ fontSize: 12, color: "#4caf50", marginBottom: 6, fontWeight: "500" }}>
+                            {category}
+                        </Text>
+                    )}
                     <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 4 }}>
                         <Feather name="clock" size={14} color="#888" />
                         <Text style={{ fontSize: 12, color: "#888", marginLeft: 5 }}>

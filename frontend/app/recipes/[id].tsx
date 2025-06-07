@@ -66,6 +66,11 @@ const RecipeDetail = () => {
 
                 <View style={{ paddingHorizontal: 24, paddingTop: 24, paddingBottom: 40 }}>
                     <Text style={{ fontSize: 26, fontWeight: 'bold', color: '#111', marginBottom: 8 }}>{recipe.name}</Text>
+                    {recipe.category && (
+                        <Text style={{ fontSize: 14, color: '#4caf50', marginBottom: 8, fontWeight: '500' }}>
+                            {recipe.category}
+                        </Text>
+                    )}
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
                         <Text style={{ color: '#888', marginRight: 16 }}>⏱ {recipe.minutes} min</Text>
                         <Text style={{ marginLeft: 8, color: '#FFD700', fontWeight: 'bold' }}>★ {recipe.score ?? 4.8}</Text>

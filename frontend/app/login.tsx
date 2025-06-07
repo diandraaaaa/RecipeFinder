@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, SafeAreaView } from 'react-native';
-import { useRouter } from 'expo-router';
+import {Redirect, useRouter} from 'expo-router';
+import { useAuth } from '@/context/AuthContex'
+
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -9,24 +11,13 @@ export default function LoginScreen() {
   const [success, setSuccess] = useState('');
   const router = useRouter();
 
-  const handleLogin = () => {
-    setError('');
-    setSuccess('');
-    if (!email || !password) {
-      setError('Please enter email and password');
-      return;
-    }
-    // Allow any email and password for now
-    setSuccess('Login successful!');
-    setTimeout(() => {
-      router.replace('/(tabs)/home');
-    }, 600);
-  };
+  const {session, signin} = useAuth()
 
-  // To hide the nav bar, set headerShown: false in navigation config for this screen
-  // If using Expo Router, you can add: export const options = { headerShown: false, tabBarStyle: { display: 'none' } }
-  // Or for React Navigation: options={{ headerShown: false, tabBarStyle: { display: 'none' } }}
+  const handleSubmit = async () => {
+    signin({email, password})
+  }
 
+  if(session) return <Redirect href="/"/>
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' }}>
       <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#111', marginBottom: 32, textAlign: 'center' }}>Sign In</Text>
@@ -52,7 +43,7 @@ export default function LoginScreen() {
         {success ? <Text style={{ color: '#4caf50', marginBottom: 16, textAlign: 'center' }}>{success}</Text> : null}
         <TouchableOpacity
           style={{ backgroundColor: '#4caf50', borderRadius: 12, padding: 16, alignItems: 'center', marginBottom: 16 }}
-          onPress={handleLogin}
+          onPress={handleSubmit}
         >
           <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>Sign In</Text>
         </TouchableOpacity>

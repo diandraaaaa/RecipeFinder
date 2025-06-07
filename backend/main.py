@@ -56,9 +56,13 @@ def match_ingredients(input_tokens):
 
 # --- ROUTES ---
 
+from fastapi import Query
+
 @app.get("/recipes")
-def list_recipes():
-    # Return the first 50 recipes
+def list_recipes(diet: str = Query(None, description="Diet category: vegan, vegetarian, pescatarian, omnivore")):
+    if diet:
+        # Filter using the new 'diet' column (case insensitive)
+        return [r for r in recommender.recipes if r.get('diet', '').lower() == diet.lower()][:50]
     return recommender.recipes[:50]
 
 @app.get("/recipes/{id}")

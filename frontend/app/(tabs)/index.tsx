@@ -1,4 +1,3 @@
-// app/home.tsx
 import {
     View,
     Text,
@@ -18,11 +17,14 @@ import SearchBar from '@/components/SearchBar';
 import RecipeCard from '@/components/RecipeCard';
 import { Recipe } from '@/interfaces/interfaces';
 
-const Home = () => {
+const sections = ['Popular', 'Vegan', 'Vegetarian', 'Pescatarian', 'Omnivore', 'Breakfast', 'Lunch', 'Dinner', 'Dessert'];
+
+const Index = () => {
     const router = useRouter();
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [search, setSearch] = useState('');
     const [loading, setLoading] = useState(true);
+    const [selectedSection, setSelectedSection] = useState('Popular');
 
     useEffect(() => {
         (async () => {
@@ -38,10 +40,30 @@ const Home = () => {
         const ingredients = search.split(/[, ]+/).map(s => s.trim()).filter(Boolean);
         setLoading(true);
         fetchRecommendations(ingredients)
-            .then(data => setRecipes(data))
+            .then(data => {
+                // Filter recipes based on selected section
+                const filteredData = data.filter((recipe: Recipe) => {
+                    if (selectedSection === 'Popular') return true;
+                    return recipe.category?.toLowerCase() === selectedSection.toLowerCase();
+                });
+                setRecipes(filteredData);
+            })
             .catch(() => setRecipes([]))
             .finally(() => setLoading(false));
-    }, [search]);
+    }, [search, selectedSection]);
+
+    // Fetch by section
+    const handleSectionPress = async (section: string) => {
+        setSelectedSection(section);
+        setLoading(true);
+        try {
+            const data = await fetchRecipes({ category: section.toLowerCase() });
+            setRecipes(data);
+        } catch (err) {
+            setRecipes([]);
+        }
+        setLoading(false);
+    };
 
     return (
         <SafeAreaView className="flex-1 bg-white">
@@ -75,19 +97,24 @@ const Home = () => {
                 {/* Search Bar */}
                 <View className="mt-6">
                     <SearchBar
-                        placeholder="Search recipes"
+                        placeholder={`Search ${selectedSection} recipes`}
                         value={search}
                         onChangeText={setSearch}
                     />
                 </View>
 
-                {/* Category Selector */}
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 24 }}>
-                    {['Popular', 'Western', 'Drinks', 'Local', 'Dessert'].map((cat, idx) => (
+                {/* Section Selector */}
+                <ScrollView 
+                    horizontal 
+                    showsHorizontalScrollIndicator={false} 
+                    style={{ marginTop: 24 }}
+                    contentContainerStyle={{ paddingRight: 20 }}
+                >
+                    {sections.map((section) => (
                         <TouchableOpacity
-                            key={cat}
+                            key={section}
                             style={{
-                                backgroundColor: idx === 0 ? '#111' : '#fff',
+                                backgroundColor: selectedSection === section ? '#111' : '#fff',
                                 borderRadius: 18,
                                 paddingVertical: 8,
                                 paddingHorizontal: 18,
@@ -95,15 +122,16 @@ const Home = () => {
                                 borderWidth: 1,
                                 borderColor: '#eee',
                             }}
+                            onPress={() => handleSectionPress(section)}
                         >
-                            <Text style={{ color: idx === 0 ? '#fff' : '#111', fontWeight: 'bold', fontSize: 15 }}>{cat}</Text>
+                            <Text style={{ color: selectedSection === section ? '#fff' : '#111', fontWeight: 'bold', fontSize: 15 }}>{section}</Text>
                         </TouchableOpacity>
                     ))}
                 </ScrollView>
 
                 {/* Section Title */}
                 <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#222', marginTop: 32, marginBottom: 12 }}>
-                    Popular Recipes
+                    {selectedSection} Recipes
                 </Text>
 
                 {/* Recipe Grid */}
@@ -124,4 +152,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default Index;

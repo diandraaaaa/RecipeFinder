@@ -8,6 +8,7 @@ export interface Recipe {
     score?: number; // optional, e.g., for recommendations
     ingredients?: string[];
     instructions?: string;
+    category?: string; // optional category for filtering
 }
 
 // Recipe shown in trending or analytics (if implemented)

@@ -4,12 +4,12 @@
     "slug": "RecipeFinder",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/logo.png",
+    "icon": "./assets/icons/logo.png",
     "scheme": "recipefinder",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/logo.png",
+      "image": "./assets/icons/logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#f59e0b"
     },
@@ -18,17 +18,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/logo.png",
+        "foregroundImage": "./assets/icons/logo.png",
         "backgroundColor": "#f59e0b"
       },
       "edgeToEdgeEnabled": true,
       "splash": {
-        "ldpi": "./assets/images/logo.png",
-        "mdpi": "./assets/images/logo.png",
-        "hdpi": "./assets/images/logo.png",
-        "xhdpi": "./assets/images/logo.png",
-        "xxhdpi": "./assets/images/logo.png",
-        "xxxhdpi": "./assets/images/logo.png",
+        "ldpi": "./assets/icons/logo.png",
         "resizeMode": "contain",
         "backgroundColor": "#f59e0b"
       }
@@ -36,7 +31,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/logo.png"
+      "favicon": "./assets/icons/logo.png"
     },
     "plugins": [
       "expo-router",
@@ -46,7 +41,7 @@
       "typedRoutes": true
     },
     "extra": {
-      "BACKEND_URL": "http://192.168.0.166:8000"
+      "BACKEND_URL": "http://172.20.10.7:8000"
     }
   }
 }
