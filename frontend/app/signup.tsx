@@ -1,22 +1,58 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
+import {account} from "@/lib/appwriteConfig";
 
 export default function SignupScreen() {
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const router = useRouter();
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
-  const handleSignup = async () => {
+    const handleSignup = async () => {
+        setError('');
+        setSuccess('');
 
-  };
+        // 1. Validation
+        if (!name || !email || !password || !confirmPassword) {
+            setError('All fields are required.');
+            return;
+        }
+        if (password.length < 8) {
+            setError('Password must be at least 8 characters.');
+            return;
+        }
+        if (password !== confirmPassword) {
+            setError('Passwords do not match.');
+            return;
+        }
 
+        setLoading(true);
+        try {
+            // If you have a signup from context
+            // await signup({ name, email, password });
 
+            // OR, if calling Appwrite directly:
+            await account.create('unique()', email, password, name);
 
-  // To hide the nav bar, set headerShown: false in navigation config for this screen
+            setSuccess('Account created! 🎉 You can now log in.');
+            setTimeout(() => {
+                router.replace('/login');
+            }, 1500);
+        } catch (err) {
+            setError(
+                (err && typeof err === "object" && "message" in err && (err as any).message) ||
+                "Signup failed. Please try again."
+            );
+        }
+        setLoading(false);
+    };
+
+    // To hide the nav bar, set headerShown: false in navigation config for this screen
   // If using Expo Router, you can add: export const options = { headerShown: false, tabBarStyle: { display: 'none' } }
   // Or for React Navigation: options={{ headerShown: false, tabBarStyle: { display: 'none' } }}
 
@@ -24,7 +60,15 @@ export default function SignupScreen() {
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#111', marginBottom: 32, textAlign: 'center' }}>Sign Up</Text>
         <View style={{ width: '100%', maxWidth: 340, paddingHorizontal: 12 }}>
-          <TextInput
+            <TextInput
+                placeholder="Name"
+                placeholderTextColor="#888"
+                style={{ borderWidth: 1, borderColor: '#eee', borderRadius: 12, padding: 14, marginBottom: 16, color: '#111', fontSize: 16 }}
+                value={name}
+                onChangeText={setName}
+                autoCapitalize="none"
+            />
+            <TextInput
               placeholder="Email"
               placeholderTextColor="#888"
               style={{ borderWidth: 1, borderColor: '#eee', borderRadius: 12, padding: 14, marginBottom: 16, color: '#111', fontSize: 16 }}

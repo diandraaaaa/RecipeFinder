@@ -10,12 +10,28 @@ export default function LoginScreen() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const {session, signin} = useAuth()
 
-  const handleSubmit = async () => {
-    signin({email, password})
-  }
+  const handleSignin = async () => {
+    setError('');
+    setSuccess('');
+    if (!email || !password) {
+      setError('Please enter both email and password.');
+      return;
+    }
+    setLoading(true);
+    try {
+      await signin({ email, password });
+      setSuccess('Logged in successfully! 🎉');
+    } catch (err) {
+      setError( "Something went wrong. Please try again.");
+    }
+    setLoading(false);
+  };
+
+
 
   if(session) return <Redirect href="/"/>
   return (
@@ -43,7 +59,7 @@ export default function LoginScreen() {
         {success ? <Text style={{ color: '#4caf50', marginBottom: 16, textAlign: 'center' }}>{success}</Text> : null}
         <TouchableOpacity
           style={{ backgroundColor: '#4caf50', borderRadius: 12, padding: 16, alignItems: 'center', marginBottom: 16 }}
-          onPress={handleSubmit}
+          onPress={handleSignin}
         >
           <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>Sign In</Text>
         </TouchableOpacity>
@@ -59,4 +75,4 @@ export default function LoginScreen() {
 }
 
 // For Expo Router, you can add:
-export const options = { headerShown: false, tabBarStyle: { display: 'none' } }; 
+export const options = { headerShown: false, tabBarStyle: { display: 'none' } };

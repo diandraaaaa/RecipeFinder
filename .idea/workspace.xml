@@ -5,27 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2f079e38-6250-4c08-9713-26124ba33b49" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/frontend/context/AuthContex.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/lib/appwriteConfig.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/..js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/app/(tabs)/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/(tabs)/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/(tabs)/home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/(tabs)/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/(tabs)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/(tabs)/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/app/login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/login.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/recipes/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/recipes/[id].tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/app/signup.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/signup.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/components/RecipeCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/components/RecipeCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/interfaces/interfaces.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/interfaces/interfaces.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/services/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/services/api.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/services/firebase.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/context/AuthContex.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/context/AuthContex.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,7 +97,7 @@
       <workItem from="1749109105342" duration="4673000" />
       <workItem from="1749125164540" duration="3154000" />
       <workItem from="1749139773034" duration="2205000" />
-      <workItem from="1749281562846" duration="4324000" />
+      <workItem from="1749281562846" duration="6923000" />
     </task>
     <servers />
   </component>

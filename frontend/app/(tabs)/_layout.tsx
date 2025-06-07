@@ -32,43 +32,43 @@ function TabIcon({ focused, icon, title }: any) {
 export default function TabsLayout() {
     const session = useAuth();
     return !session ? <Redirect  href="/login"/> :
-     (
-        <Tabs
-            screenOptions={{
-                tabBarShowLabel: false,
-                tabBarItemStyle: {
-                    width: '100%',
-                    height: '100%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                },
-                tabBarStyle: {
-                    backgroundColor: '#f5f5f5',
-                    borderRadius: 50,
-                    marginHorizontal: 20,
-                    marginBottom: 36,
-                    height: 52,
-                    position: 'absolute',
-                    overflow: 'hidden',
-                    borderWidth: 1,
-                    borderColor: '#e0e0e0',
-                },
-                tabBarBackground: undefined,
-            }}
-        >
-            {sections.map((section) => (
-                <Tabs.Screen
-                    key={section.name}
-                    name={section.name}
-                    options={{
-                        title: section.title,
-                        headerShown: false,
-                        tabBarIcon: ({ focused }) => (
-                            <TabIcon focused={focused} icon={section.icon} title={section.title} />
-                        ),
-                    }}
-                />
-            ))}
-        </Tabs>
-    );
+        (
+            <Tabs
+                screenOptions={{
+                    tabBarShowLabel: false,
+                    tabBarItemStyle: {
+                        width: '100%',
+                        height: '100%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    },
+                    tabBarStyle: {
+                        backgroundColor: '#f5f5f5',
+                        borderRadius: 50,
+                        marginHorizontal: 20,
+                        marginBottom: 36,
+                        height: 52,
+                        position: 'absolute',
+                        overflow: 'hidden',
+                        borderWidth: 1,
+                        borderColor: '#e0e0e0',
+                    },
+                    tabBarBackground: undefined,
+                }}
+            >
+                {sections.map((section) => (
+                    <Tabs.Screen
+                        key={section.name}
+                        name={section.name}
+                        options={{
+                            title: section.title,
+                            headerShown: false,
+                            tabBarIcon: ({ focused }) => (
+                                <TabIcon focused={focused} icon={section.icon} title={section.title} />
+                            ),
+                        }}
+                    />
+                ))}
+            </Tabs>
+        );
 }

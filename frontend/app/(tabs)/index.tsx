@@ -9,13 +9,14 @@ import {
     Image,
 } from 'react-native';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'expo-router'; // ← for navigation
+import {Redirect, useRouter} from 'expo-router'; // ← for navigation
 import { Feather } from '@expo/vector-icons';
 
 import { fetchRecipes, fetchRecommendations } from '@/services/api';
 import SearchBar from '@/components/SearchBar';
 import RecipeCard from '@/components/RecipeCard';
 import { Recipe } from '@/interfaces/interfaces';
+import {useAuth} from "@/context/AuthContex";
 
 const sections = ['Popular', 'Vegan', 'Vegetarian', 'Pescatarian', 'Omnivore', 'Breakfast', 'Lunch', 'Dinner', 'Dessert'];
 
@@ -64,9 +65,14 @@ const Index = () => {
         }
         setLoading(false);
     };
+    const {user, session, signout} =useAuth()
 
+    if (!session) return <Redirect href="/login" />;
     return (
         <SafeAreaView className="flex-1 bg-white">
+            <TouchableOpacity onPress={signout}>
+                <Text >Logout</Text>
+            </TouchableOpacity>
             <ScrollView
                 className="flex-1 px-6"
                 showsVerticalScrollIndicator={false}
