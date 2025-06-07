@@ -1,9 +1,91 @@
-import { View, Text } from "react-native";
+import {
+    View,
+    Text,
+    FlatList,
+    ActivityIndicator,
+    SafeAreaView,
+} from 'react-native';
+import { useEffect, useState } from 'react';
+import { Redirect } from 'expo-router';
+import { useAuth } from '@/context/AuthContex';
+import { fetchFavorites, fetchRecipe } from '@/services/api';
+import RecipeCard from '@/components/RecipeCard';
+import { Recipe } from '@/interfaces/interfaces';
 
-export default function Screen() {
+const Favorites = () => {
+    const [recipes, setRecipes] = useState<Recipe[]>([]);
+    const [loading, setLoading] = useState(true);
+    const { user, session } = useAuth();
+
+    useEffect(() => {
+        if (!user) return;
+        setLoading(true);
+
+        (async () => {
+            try {
+                // Step 1: Get array of recipe IDs the user favorited
+                const favoriteIds = await fetchFavorites(user.$id);
+
+                // Step 2: If no favorites, set empty recipes
+                if (!favoriteIds.length) {
+                    setRecipes([]);
+                    setLoading(false);
+                    return;
+                }
+
+                // Step 3: Fetch all recipe data for each favorite (in parallel)
+                const recipePromises = favoriteIds.map((id: number) => fetchRecipe(id));
+                const recipeResults = await Promise.allSettled(recipePromises);
+
+                // Step 4: Only keep fulfilled recipes (in case some are deleted or missing)
+                const recipeObjs = recipeResults
+                    .filter(result => result.status === "fulfilled")
+                    .map(result => (result as PromiseFulfilledResult<Recipe>).value);
+
+                setRecipes(recipeObjs);
+            } catch (error) {
+                console.error('Failed to fetch favorite recipes:', error);
+                setRecipes([]);
+            } finally {
+                setLoading(false);
+            }
+        })();
+    }, [user]);
+
+    if (!session) return <Redirect href="/login" />;
+
     return (
-        <View className="bg-red-100">
-            <Text className="">TAILWIND TESeeeee</Text>
-        </View>
+        <SafeAreaView className="flex-1 bg-white">
+            <View className="flex-1 px-6">
+                <Text className="text-[22px] font-bold text-[#111] mt-[18px]">
+                    Your Favorite Recipes
+                </Text>
+
+                {loading ? (
+                    <ActivityIndicator size="large" color="#111" className="mt-12" />
+                ) : recipes.length === 0 ? (
+                    <Text className="text-gray-500 text-center mt-12">
+                        No favorite recipes yet. Add some from the home page!
+                    </Text>
+                ) : (
+                    <FlatList
+                        data={recipes}
+                        renderItem={({ item }) => (
+                            <RecipeCard
+                                {...item}
+                                isFavorite={true}
+                                onToggleFavorite={() => {}} // You can optionally add a remove here
+                            />
+                        )}
+                        keyExtractor={(item) => item.id.toString()}
+                        numColumns={2}
+                        columnWrapperStyle={{ justifyContent: 'space-between' }}
+                        contentContainerStyle={{ paddingBottom: 24 }}
+                    />
+                )}
+            </View>
+        </SafeAreaView>
     );
-}
+};
+
+export default Favorites;

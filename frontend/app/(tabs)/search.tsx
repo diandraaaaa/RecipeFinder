@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, ActivityIndicator, SafeAreaView, TouchableOpacity, Image } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { Feather, FontAwesome } from '@expo/vector-icons';
 import SearchBar from '@/components/SearchBar';
 import RecipeCard from '@/components/RecipeCard';
 import { Recipe } from '@/interfaces/interfaces';
 import { fetchRecommendations } from '@/services/api';
+import { useAuth } from '@/context/AuthContex';
 
 const SearchPage = () => {
+    const { user, session} = useAuth();
     const [ingredients, setIngredients] = useState('');
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [loading, setLoading] = useState(false);
@@ -35,20 +37,21 @@ const SearchPage = () => {
                 ListHeaderComponent={
                     <>
                         {/* Header */}
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 18 }}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Image
-                                    source={{ uri: 'https://randomuser.me/api/portraits/women/44.jpg' }}
-                                    style={{ width: 38, height: 38, borderRadius: 19, marginRight: 10 }}
-                                />
-                                <View>
-                                    <Text style={{ color: '#888', fontSize: 13 }}>Hello, Teresa!</Text>
-                                </View>
-                            </View>
-                            <TouchableOpacity>
-                                <Feather name="bell" size={24} color="#222" />
-                            </TouchableOpacity>
+                        <View className="flex-row items-center justify-between mt-[18px]">
+                    <View className="flex-row items-center">
+                        <View className="w-10 h-10 rounded-full bg-gray-200 items-center justify-center mr-2">
+                            <FontAwesome name="user" size={22} color="#888" />
                         </View>
+                        <View>
+                            <Text className="text-gray-500 text-xs">
+                                Hello, {user?.name ? user.name.split(' ')[0] : 'there'}!
+                            </Text>
+                        </View>
+                    </View>
+                    <TouchableOpacity>
+                        <Feather name="bell" size={24} color="#222" />
+                    </TouchableOpacity>
+                </View>
                         {/* Tagline */}
                         <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#111', marginTop: 18, lineHeight: 30 }}>
                             Find recipes by ingredients

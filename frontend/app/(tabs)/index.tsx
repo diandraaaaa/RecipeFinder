@@ -6,87 +6,81 @@ import {
     ScrollView,
     SafeAreaView,
     TouchableOpacity,
-    Image,
 } from 'react-native';
 import { useEffect, useState } from 'react';
-import {Redirect, useRouter} from 'expo-router'; // ← for navigation
-import { Feather } from '@expo/vector-icons';
+import { Redirect } from 'expo-router';
+import { Feather, FontAwesome } from '@expo/vector-icons';
 
-import { fetchRecipes, fetchRecommendations } from '@/services/api';
+import { fetchRecipes, fetchRecommendations, toggleFavorite} from '@/services/api';
 import SearchBar from '@/components/SearchBar';
 import RecipeCard from '@/components/RecipeCard';
 import { Recipe } from '@/interfaces/interfaces';
-import {useAuth} from "@/context/AuthContex";
+import { useAuth } from '@/context/AuthContex';
 
 const sections = ['Popular', 'Vegan', 'Vegetarian', 'Pescatarian', 'Omnivore', 'Breakfast', 'Lunch', 'Dinner', 'Dessert'];
 
+
 const Index = () => {
-    const router = useRouter();
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [search, setSearch] = useState('');
     const [loading, setLoading] = useState(true);
     const [selectedSection, setSelectedSection] = useState('Popular');
+    const [favorites, setFavorites] = useState<number[]>([]);
 
+    const { user, session, signout } = useAuth();
+
+    // Load recipes
     useEffect(() => {
+        setLoading(true);
         (async () => {
-            const data = await fetchRecipes();
-            setRecipes(data);
+            if (search.trim()) {
+                const ingredients = search.split(/[, ]+/).map(s => s.trim()).filter(Boolean);
+                const recs = await fetchRecommendations(ingredients);
+                const filtered = selectedSection === 'Popular'
+                    ? recs
+                    : recs.filter(r =>
+                        r.category?.toLowerCase() === selectedSection.toLowerCase()
+                    );
+                setRecipes(filtered);
+            } else {
+                const data = await fetchRecipes(
+                    selectedSection === 'Popular' ? {} : { category: selectedSection.toLowerCase() }
+                );
+                setRecipes(data);
+            }
             setLoading(false);
         })();
-    }, []);
-
-    // Call recommendations API every time search changes
-    useEffect(() => {
-        if (!search.trim()) return;
-        const ingredients = search.split(/[, ]+/).map(s => s.trim()).filter(Boolean);
-        setLoading(true);
-        fetchRecommendations(ingredients)
-            .then(data => {
-                // Filter recipes based on selected section
-                const filteredData = data.filter((recipe: Recipe) => {
-                    if (selectedSection === 'Popular') return true;
-                    return recipe.category?.toLowerCase() === selectedSection.toLowerCase();
-                });
-                setRecipes(filteredData);
-            })
-            .catch(() => setRecipes([]))
-            .finally(() => setLoading(false));
     }, [search, selectedSection]);
 
-    // Fetch by section
-    const handleSectionPress = async (section: string) => {
+    const handleSectionPress = (section: string) => {
         setSelectedSection(section);
-        setLoading(true);
-        try {
-            const data = await fetchRecipes({ category: section.toLowerCase() });
-            setRecipes(data);
-        } catch (err) {
-            setRecipes([]);
-        }
-        setLoading(false);
+        setSearch('');
     };
-    const {user, session, signout} =useAuth()
+
+    const handleToggleFavorite = async (id: number) => {
+        if (!user) return;
+        const updatedFavorites = await toggleFavorite(user.$id, id);
+        setFavorites(updatedFavorites); // should return array of IDs
+    };
 
     if (!session) return <Redirect href="/login" />;
     return (
         <SafeAreaView className="flex-1 bg-white">
-            <TouchableOpacity onPress={signout}>
-                <Text >Logout</Text>
-            </TouchableOpacity>
             <ScrollView
                 className="flex-1 px-6"
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 24 }}
             >
                 {/* Header */}
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 18 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Image
-                            source={{ uri: 'https://randomuser.me/api/portraits/women/44.jpg' }}
-                            style={{ width: 38, height: 38, borderRadius: 19, marginRight: 10 }}
-                        />
+                <View className="flex-row items-center justify-between mt-[18px]">
+                    <View className="flex-row items-center">
+                        <View className="w-10 h-10 rounded-full bg-gray-200 items-center justify-center mr-2">
+                            <FontAwesome name="user" size={22} color="#888" />
+                        </View>
                         <View>
-                            <Text style={{ color: '#888', fontSize: 13 }}>Hello, Teresa!</Text>
+                            <Text className="text-gray-500 text-xs">
+                                Hello, {user?.name ? user.name.split(' ')[0] : 'there'}!
+                            </Text>
                         </View>
                     </View>
                     <TouchableOpacity>
@@ -95,9 +89,9 @@ const Index = () => {
                 </View>
 
                 {/* Title */}
-                <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#111', marginTop: 18, lineHeight: 30 }}>
-                    Reduce food waste,{"\n"} cook smart at{" "}
-                    <Text style={{ color: '#4caf50', fontWeight: 'bold' }}>home</Text>
+                <Text className="text-[22px] font-bold text-[#111] mt-[18px] leading-[30px]">
+                    Reduce food waste,{"\n"} cook smart at
+                    <Text className="text-green-600 font-bold"> home</Text>
                 </Text>
 
                 {/* Search Bar */}
@@ -110,33 +104,27 @@ const Index = () => {
                 </View>
 
                 {/* Section Selector */}
-                <ScrollView 
-                    horizontal 
-                    showsHorizontalScrollIndicator={false} 
+                <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
                     style={{ marginTop: 24 }}
                     contentContainerStyle={{ paddingRight: 20 }}
                 >
                     {sections.map((section) => (
                         <TouchableOpacity
                             key={section}
-                            style={{
-                                backgroundColor: selectedSection === section ? '#111' : '#fff',
-                                borderRadius: 18,
-                                paddingVertical: 8,
-                                paddingHorizontal: 18,
-                                marginRight: 12,
-                                borderWidth: 1,
-                                borderColor: '#eee',
-                            }}
+                            className={`rounded-[18px] py-2 px-4 mr-3 border border-[#eee] ${selectedSection === section ? "bg-[#111]" : "bg-[#fff]"}`}
                             onPress={() => handleSectionPress(section)}
                         >
-                            <Text style={{ color: selectedSection === section ? '#fff' : '#111', fontWeight: 'bold', fontSize: 15 }}>{section}</Text>
+                            <Text className={`font-bold text-[15px] ${selectedSection === section ? "text-white" : "text-[#111]"}`}>
+                                {section}
+                            </Text>
                         </TouchableOpacity>
                     ))}
                 </ScrollView>
 
                 {/* Section Title */}
-                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#222', marginTop: 32, marginBottom: 12 }}>
+                <Text className="text-[16px] font-bold text-[#222] mt-8 mb-3">
                     {selectedSection} Recipes
                 </Text>
 
@@ -146,7 +134,13 @@ const Index = () => {
                 ) : (
                     <FlatList
                         data={recipes}
-                        renderItem={({ item }) => <RecipeCard {...item} />}
+                        renderItem={({ item }) => (
+                            <RecipeCard
+                                {...item}
+                                isFavorite={favorites.includes(item.id)}
+                                onToggleFavorite={handleToggleFavorite}
+                            />
+                        )}
                         keyExtractor={(item) => item.id.toString()}
                         numColumns={2}
                         columnWrapperStyle={{ justifyContent: 'space-between' }}
