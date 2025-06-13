@@ -48,9 +48,6 @@ const SearchPage = () => {
                             </Text>
                         </View>
                     </View>
-                    <TouchableOpacity>
-                        <Feather name="bell" size={24} color="#222" />
-                    </TouchableOpacity>
                 </View>
                         {/* Tagline */}
                         <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#111', marginTop: 18, lineHeight: 30 }}>

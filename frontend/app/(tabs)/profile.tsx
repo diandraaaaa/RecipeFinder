@@ -3,8 +3,7 @@ import {
     Text,
     SafeAreaView,
     TouchableOpacity,
-    ScrollView,
-} from 'react-native';
+    ScrollView,} from 'react-native';
 import { useEffect, useState } from 'react';
 import { Redirect, useRouter } from 'expo-router';
 import { Feather, MaterialIcons, Ionicons } from '@expo/vector-icons';
@@ -79,19 +78,11 @@ const Profile = () => {
                         <Text className="text-2xl font-bold text-green-600">{favoriteCount}</Text>
                         <Text className="text-gray-500">Favorites</Text>
                     </View>
-                    <View className="items-center">
-                        <Text className="text-2xl font-bold text-green-600">0</Text>
-                        <Text className="text-gray-500">Recipes</Text>
-                    </View>
-                    <View className="items-center">
-                        <Text className="text-2xl font-bold text-green-600">0</Text>
-                        <Text className="text-gray-500">Reviews</Text>
-                    </View>
                 </View>
 
                 {/* Settings */}
                 <View className="mt-8 px-6">
-                    <Text className="text-lg font-semibold text-gray-800 mb-4">Settings</Text>
+                    <Text className="text-2xl font-semibold text-gray-800 mb-4">Settings</Text>
                     
                     <TouchableOpacity 
                         onPress={() => router.push('/edit-profile')}
@@ -126,7 +117,7 @@ const Profile = () => {
                     onPress={signout}
                     className="mx-6 mt-8 mb-8 bg-green-600 py-3 rounded-lg"
                 >
-                    <Text className="text-white text-center font-semibold">Logout</Text>
+                    <Text className="text-white text-center font-semibold py-3">Logout</Text>
                 </TouchableOpacity>
             </ScrollView>
         </SafeAreaView>

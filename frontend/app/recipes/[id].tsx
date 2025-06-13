@@ -2,22 +2,57 @@ import React, { useEffect, useState } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { View, Text, Image, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { fetchRecipe } from '@/services/api';
+import {fetchRecipe, fetchFavorites, toggleFavorite} from '@/services/api';
+import { useAuth } from '@/context/AuthContex';
+import { FontAwesome } from "@expo/vector-icons";
 import { Recipe } from '@/interfaces/interfaces';
+
+const fallbackImg = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80";
+
+function parseIngredients(ingredients: any): string[] {
+    if (!ingredients) return [];
+    if (Array.isArray(ingredients)) return ingredients;
+    if (typeof ingredients === "string") {
+        try {
+            return JSON.parse(ingredients.replace(/'/g, '"'));
+        } catch {
+            return [ingredients];
+        }
+    }
+    return [];
+}
+
+function parseInstructions(instructions: any): string[] {
+    if (!instructions) return [];
+    if (Array.isArray(instructions)) return instructions;
+    if (typeof instructions === "string") {
+        const steps = instructions
+            .split(/\n|(?<=\.)\s(?=[A-Z])/)
+            .map((s: string) => s.trim())
+            .filter(Boolean);
+        return steps;
+    }
+    return [];
+}
 
 const RecipeDetail = () => {
     const { id } = useLocalSearchParams();
     const router = useRouter();
+    const { user } = useAuth();
 
     const [recipe, setRecipe] = useState<Recipe | null>(null);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<'ingredients' | 'instructions'>('ingredients');
+    const [isFavorite, setIsFavorite] = useState(false);
+    const [favoriteLoading, setFavoriteLoading] = useState(false);
 
     useEffect(() => {
         const load = async () => {
             try {
                 const data = await fetchRecipe(Number(id));
-                setRecipe(data);
+                const ingredients = parseIngredients(data.ingredients);
+                const instructions = parseInstructions(data.instructions);
+                setRecipe({ ...data, ingredients, instructions });
             } catch {
                 setRecipe(null);
             } finally {
@@ -27,84 +62,103 @@ const RecipeDetail = () => {
         load();
     }, [id]);
 
+    useEffect(() => {
+        const checkFavorite = async () => {
+            if (!user || !id) return;
+            const favs = await fetchFavorites(user.$id);
+            setIsFavorite(favs.includes(Number(id)));
+        };
+        checkFavorite();
+    }, [id, user]);
+
+    // Same signature as RecipeCard
+    const onToggleFavorite = async (recipeId: number) => {
+        if (!user) return;
+        setFavoriteLoading(true);
+        const favs = await toggleFavorite(user.$id, recipeId);
+        setIsFavorite(favs.includes(recipeId));
+        setFavoriteLoading(false);
+    };
+
     if (loading) {
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-                <ActivityIndicator size="large" color="#111" style={{ marginTop: 40 }} />
+            <SafeAreaView className="flex-1 bg-white">
+                <ActivityIndicator size="large" color="#111" className="mt-10" />
             </SafeAreaView>
         );
     }
 
     if (!recipe) {
         return (
-            <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff' }}>
-                <Text style={{ textAlign: 'center', color: '#888', marginTop: 80 }}>Recipe not found.</Text>
-                <TouchableOpacity onPress={() => router.push('/')}
-                    style={{ marginTop: 24 }}>
-                    <Text style={{ fontSize: 18, color: '#4caf50', textDecorationLine: 'underline' }}>Back to Home</Text>
+            <SafeAreaView className="flex-1 justify-center items-center bg-white">
+                <Text className="text-center text-gray-500 mt-20">Recipe not found.</Text>
+                <TouchableOpacity onPress={() => router.push('/')} className="mt-6">
+                    <Text className="text-lg text-green-600 underline">Back to Home</Text>
                 </TouchableOpacity>
             </SafeAreaView>
         );
     }
 
-    const sanitized = recipe.name.replace(/[^a-zA-Z0-9 ]/g, '');
-    const imgUrl = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80";
+    const imgUrl = recipe.image && recipe.image.startsWith("http") ? recipe.image : fallbackImg;
+
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-            {/* Back Button */}
-            <View style={{ position: 'absolute', left: 16, top: 16, zIndex: 20 }}>
+        <SafeAreaView className="flex-1 bg-white">
+            <View className="flex-row justify-between items-center absolute top-10 left-0 right-0 z-20 px-4">
+                {/* Back Button */}
                 <TouchableOpacity
-                    style={{ backgroundColor: 'rgba(255,255,255,0.8)', borderRadius: 999, padding: 8 }}
+                    className="bg-white/80 rounded-full p-2"
                     onPress={() => router.back()}
                 >
-                    <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#111' }}>←</Text>
+                    <Text className="text-2xl font-bold text-black">←</Text>
+                </TouchableOpacity>
+
+                {/* Favorite Heart */}
+                <TouchableOpacity
+                    onPress={() => onToggleFavorite(recipe.id)}
+                    disabled={favoriteLoading}
+                    className="bg-white/80 rounded-full p-2"
+                >
+                    <FontAwesome
+                        name={isFavorite ? "heart" : "heart-o"}
+                        size={28}
+                        color={isFavorite ? "#ef4444" : "#d0d0d0"}
+                    />
                 </TouchableOpacity>
             </View>
 
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <Image source={{ uri: imgUrl }} style={{ width: '100%', height: 220 }} resizeMode="cover" />
 
-                <View style={{ paddingHorizontal: 24, paddingTop: 24, paddingBottom: 40 }}>
-                    <Text style={{ fontSize: 26, fontWeight: 'bold', color: '#111', marginBottom: 8 }}>{recipe.name}</Text>
-                    {recipe.category && (
-                        <Text style={{ fontSize: 14, color: '#4caf50', marginBottom: 8, fontWeight: '500' }}>
-                            {recipe.category}
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <Image source={{ uri: imgUrl }} className="w-full h-56" resizeMode="cover" />
+
+                <View className="px-6 pt-6 pb-10">
+                    <Text className="text-2xl font-bold text-black mb-2">{recipe.title}</Text>
+
+                    {recipe.diet && (
+                        <Text className="text-sm text-green-600 mb-2 font-semibold">
+                            {recipe.diet}
                         </Text>
                     )}
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
-                        <Text style={{ color: '#888', marginRight: 16 }}>⏱ {recipe.minutes} min</Text>
-                        <Text style={{ marginLeft: 8, color: '#FFD700', fontWeight: 'bold' }}>★ {recipe.score ?? 4.8}</Text>
-                        <Text style={{ marginLeft: 6, color: '#bbb' }}>(94 Reviews)</Text>
-                    </View>
 
-                    {/* Nutrition Info (colored chart) */}
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
-                        <View style={{ borderRadius: 999, backgroundColor: '#fff', padding: 24, alignItems: 'center', justifyContent: 'center', width: 100, height: 100, borderWidth: 1, borderColor: '#eee', shadowColor: '#000', shadowOpacity: 0.04, shadowRadius: 8, shadowOffset: { width: 0, height: 2 } }}>
-                            <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#111' }}>550</Text>
-                            <Text style={{ color: '#888', fontSize: 12 }}>kcal/serv</Text>
-                        </View>
-                        <View style={{ marginLeft: 24 }}>
-                            <Text style={{ color: '#7DD36E', fontWeight: 'bold', fontSize: 15 }}>protein 40%</Text>
-                            <Text style={{ color: '#4FC3F7', fontWeight: 'bold', fontSize: 15 }}>fat 50%</Text>
-                            <Text style={{ color: '#90A4AE', fontWeight: 'bold', fontSize: 15 }}>carb 10%</Text>
-                        </View>
+                    <View className="flex-row items-center mb-3">
+                        <Text className="text-gray-500 mr-4">⏱ {recipe.total_time} min</Text>
+                        <Text className="flex-1 text-right text-yellow-400 font-bold">★ {recipe.rating?.toFixed(1) ?? '4.5'}</Text>
                     </View>
 
                     {/* Tabs */}
-                    <View style={{ flexDirection: 'row', backgroundColor: '#f5f5f5', borderRadius: 16, marginBottom: 24 }}>
+                    <View className="flex-row bg-gray-100 rounded-xl mb-5">
                         <TouchableOpacity
-                            style={{ flex: 1, paddingVertical: 14, borderRadius: 16, backgroundColor: activeTab === 'ingredients' ? '#fff' : 'transparent' }}
+                            className={`flex-1 py-3 rounded-xl ${activeTab === 'ingredients' ? 'bg-white' : ''}`}
                             onPress={() => setActiveTab('ingredients')}
                         >
-                            <Text style={{ textAlign: 'center', fontWeight: 'bold', color: activeTab === 'ingredients' ? '#111' : '#888' }}>
+                            <Text className={`text-center font-bold ${activeTab === 'ingredients' ? 'text-black' : 'text-gray-400'}`}>
                                 Ingredients
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={{ flex: 1, paddingVertical: 14, borderRadius: 16, backgroundColor: activeTab === 'instructions' ? '#fff' : 'transparent' }}
+                            className={`flex-1 py-3 rounded-xl ${activeTab === 'instructions' ? 'bg-white' : ''}`}
                             onPress={() => setActiveTab('instructions')}
                         >
-                            <Text style={{ textAlign: 'center', fontWeight: 'bold', color: activeTab === 'instructions' ? '#111' : '#888' }}>
+                            <Text className={`text-center font-bold ${activeTab === 'instructions' ? 'text-black' : 'text-gray-400'}`}>
                                 Instructions
                             </Text>
                         </TouchableOpacity>
@@ -113,28 +167,31 @@ const RecipeDetail = () => {
                     {/* Tab Content */}
                     {activeTab === 'ingredients' ? (
                         <View>
-                            <Text style={{ color: '#888', marginBottom: 8 }}>Ingredients for <Text style={{ fontWeight: 'bold', color: '#111' }}>4 servings</Text></Text>
-                            {recipe.ingredients && recipe.ingredients.length > 0 ? (
+                            <Text className="text-gray-400 mb-2">
+                                Ingredients for <Text className="font-bold text-black">{recipe.yields ?? '4 servings'}</Text>
+                            </Text>
+                            {Array.isArray(recipe.ingredients) && recipe.ingredients.length > 0 ? (
                                 recipe.ingredients.map((ing: string, idx: number) => (
-                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8 }} key={idx}>
-                                        <Text style={{ color: '#111' }}>{ing}</Text>
+                                    <View className="flex-row justify-between py-2" key={idx}>
+                                        <Text className="text-black">{ing}</Text>
                                     </View>
                                 ))
                             ) : (
-                                <Text style={{ color: '#bbb' }}>No ingredients found.</Text>
+                                <Text className="text-gray-400">No ingredients found.</Text>
                             )}
                         </View>
                     ) : (
                         <View>
-                            {recipe.instructions ? (
-                                recipe.instructions.split('\n').map((ins: string, idx: number) => (
-                                    <Text style={{ marginBottom: 12, color: '#111' }} key={idx}>{ins.trim()}</Text>
+                            {Array.isArray(recipe.instructions) && recipe.instructions.length > 0 ? (
+                                recipe.instructions.map((ins: string, idx: number) => (
+                                    <Text className="mb-3 text-black" key={idx}>{ins.trim()}</Text>
                                 ))
                             ) : (
-                                <Text style={{ color: '#bbb' }}>No instructions available.</Text>
+                                <Text className="text-gray-400">No instructions available.</Text>
                             )}
                         </View>
                     )}
+
                 </View>
             </ScrollView>
         </SafeAreaView>

@@ -83,9 +83,6 @@ const Index = () => {
                             </Text>
                         </View>
                     </View>
-                    <TouchableOpacity>
-                        <Feather name="bell" size={24} color="#222" />
-                    </TouchableOpacity>
                 </View>
 
                 {/* Title */}

@@ -1,3 +1,4 @@
+import React, { useEffect, useState, useCallback } from 'react';
 import {
     View,
     Text,
@@ -5,52 +6,57 @@ import {
     ActivityIndicator,
     SafeAreaView,
 } from 'react-native';
-import { useEffect, useState } from 'react';
 import { Redirect } from 'expo-router';
 import { useAuth } from '@/context/AuthContex';
 import { fetchFavorites, fetchRecipe } from '@/services/api';
 import RecipeCard from '@/components/RecipeCard';
 import { Recipe } from '@/interfaces/interfaces';
+import { useIsFocused } from '@react-navigation/native';
 
 const Favorites = () => {
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [loading, setLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
     const { user, session } = useAuth();
+    const isFocused = useIsFocused();
 
-    useEffect(() => {
+    // Fetches favorite recipes based on current user
+    const loadFavorites = useCallback(async () => {
         if (!user) return;
-        setLoading(true);
-
-        (async () => {
-            try {
-                // Step 1: Get array of recipe IDs the user favorited
-                const favoriteIds = await fetchFavorites(user.$id);
-
-                // Step 2: If no favorites, set empty recipes
-                if (!favoriteIds.length) {
-                    setRecipes([]);
-                    setLoading(false);
-                    return;
-                }
-
-                // Step 3: Fetch all recipe data for each favorite (in parallel)
-                const recipePromises = favoriteIds.map((id: number) => fetchRecipe(id));
-                const recipeResults = await Promise.allSettled(recipePromises);
-
-                // Step 4: Only keep fulfilled recipes (in case some are deleted or missing)
-                const recipeObjs = recipeResults
-                    .filter(result => result.status === "fulfilled")
-                    .map(result => (result as PromiseFulfilledResult<Recipe>).value);
-
-                setRecipes(recipeObjs);
-            } catch (error) {
-                console.error('Failed to fetch favorite recipes:', error);
+        if (!refreshing) setLoading(true);
+        try {
+            const favoriteIds = await fetchFavorites(user.$id);
+            if (!favoriteIds.length) {
                 setRecipes([]);
-            } finally {
-                setLoading(false);
+                return;
             }
-        })();
-    }, [user]);
+            const recipePromises = favoriteIds.map((id: number) => fetchRecipe(id));
+            const recipeResults = await Promise.allSettled(recipePromises);
+            const recipeObjs = recipeResults
+                .filter(result => result.status === "fulfilled")
+                .map(result => (result as PromiseFulfilledResult<Recipe>).value);
+            setRecipes(recipeObjs);
+        } catch (error) {
+            setRecipes([]);
+            console.error('Failed to fetch favorite recipes:', error);
+        } finally {
+            setLoading(false);
+            setRefreshing(false);
+        }
+    }, [user, refreshing]);
+
+    // Refresh list when user logs in or navigates to the screen
+    useEffect(() => {
+        if (user && isFocused) {
+            loadFavorites();
+        }
+    }, [user, isFocused, loadFavorites]);
+
+    // Optionally update after toggle
+    const handleToggleFavorite = async () => {
+        setRefreshing(true);
+        await loadFavorites();
+    };
 
     if (!session) return <Redirect href="/login" />;
 
@@ -61,7 +67,7 @@ const Favorites = () => {
                     Your Favorite Recipes
                 </Text>
 
-                {loading ? (
+                {loading && !refreshing ? (
                     <ActivityIndicator size="large" color="#111" className="mt-12" />
                 ) : recipes.length === 0 ? (
                     <Text className="text-gray-500 text-center mt-12">
@@ -74,13 +80,18 @@ const Favorites = () => {
                             <RecipeCard
                                 {...item}
                                 isFavorite={true}
-                                onToggleFavorite={() => {}} // You can optionally add a remove here
+                                onToggleFavorite={handleToggleFavorite}
                             />
                         )}
                         keyExtractor={(item) => item.id.toString()}
                         numColumns={2}
                         columnWrapperStyle={{ justifyContent: 'space-between' }}
                         contentContainerStyle={{ paddingBottom: 24 }}
+                        refreshing={refreshing}
+                        onRefresh={() => {
+                            setRefreshing(true);
+                            loadFavorites();
+                        }}
                     />
                 )}
             </View>
