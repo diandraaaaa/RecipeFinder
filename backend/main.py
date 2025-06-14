@@ -1,5 +1,3 @@
-# main.py
-
 from fastapi import FastAPI, Request, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from sympy.printing.pytorch import torch
@@ -54,25 +52,11 @@ async def recommend_recipes(request: Request):
     ingredients = body.get("ingredients", [])
     processed = preprocess_ingredients(ingredients)
     input_vec = vectorize_input(processed, recommender.mlb)
-
-    print("----DEBUG /recommend----")
-    print(f"User input: {ingredients}")
-    print(f"Processed ingredients: {processed}")
-    print(f"Input vector (sum): {input_vec.sum().item()}, shape: {input_vec.shape}")
-
     with torch.no_grad():
         pred = recommender.model(input_vec.unsqueeze(0)).squeeze(0)
-
-    print(f"Model prediction (first 10): {pred[:10]}")
     topk_indices = torch.topk(pred, 100).indices.numpy()
     topk_ingredients = [recommender.mlb.classes_[i] for i in topk_indices]
-    print(f"Top 10 predicted ingredients: {topk_ingredients[:10]}")
-
     results = score_recipes(pred, input_vec, recommender.recipes_df, recommender.mlb)
-
-    print(f"Num results returned: {len(results)}")
-    if results:
-        print(f"Top result: {results[0]['title'] if isinstance(results[0], dict) else results[0][1]['title']}")
 
     return [clean_dict(r) for r in results]
 

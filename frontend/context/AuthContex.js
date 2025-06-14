@@ -49,17 +49,13 @@ const AuthProvider = ({ children }) => {
     const signup = async ({ email, password, name }) => {
         setLoading(true);
         try {
-            // 1. Create account
             await account.create('unique()', email, password, name);
-            // 2. Login (create session)
             const responseSession = await account.createEmailPasswordSession(email, password);
             setSession(responseSession);
-            // 3. Get user
             const responseUser = await account.get();
             setUser(responseUser);
         } catch (error) {
             console.log(error);
-            // Optionally: set error state and show message to user
         }
         setLoading(false);
     };

@@ -1,4 +1,3 @@
-# set_backend_ip.py
 import socket
 import json
 import os

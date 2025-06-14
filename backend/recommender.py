@@ -1,12 +1,9 @@
-# recommender.py
-
 import pandas as pd
 import torch
 import torch.nn as nn
 import joblib
 from utils import preprocess_ingredients, vectorize_input, score_recipes
 
-# This must exactly match the model used in training!
 class Autoencoder(nn.Module):
     def __init__(self, input_dim):
         super().__init__()

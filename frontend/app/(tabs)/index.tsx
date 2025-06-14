@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useEffect, useState } from 'react';
 import { Redirect } from 'expo-router';
-import { Feather, FontAwesome } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 
 import { fetchRecipes, fetchRecommendations, toggleFavorite} from '@/services/api';
 import SearchBar from '@/components/SearchBar';
@@ -60,7 +60,7 @@ const Index = () => {
     const handleToggleFavorite = async (id: number) => {
         if (!user) return;
         const updatedFavorites = await toggleFavorite(user.$id, id);
-        setFavorites(updatedFavorites); // should return array of IDs
+        setFavorites(updatedFavorites);
     };
 
     if (!session) return <Redirect href="/login" />;

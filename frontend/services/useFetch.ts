@@ -5,8 +5,8 @@ type Method = 'GET' | 'POST';
 
 interface FetchOptions {
     method?: Method;
-    body?: any; // used only if method is POST
-    dependencies?: any[]; // list of things to watch for refetching
+    body?: any;
+    dependencies?: any[];
 }
 
 export const useFetch = <T>(

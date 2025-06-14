@@ -52,7 +52,6 @@ const Favorites = () => {
         }
     }, [user, isFocused, loadFavorites]);
 
-    // Optionally update after toggle
     const handleToggleFavorite = async () => {
         setRefreshing(true);
         await loadFavorites();

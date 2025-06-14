@@ -33,10 +33,7 @@ export default function SignupScreen() {
 
         setLoading(true);
         try {
-            // If you have a signup from context
-            // await signup({ name, email, password });
 
-            // OR, if calling Appwrite directly:
             await account.create('unique()', email, password, name);
 
             setSuccess('Account created! 🎉 You can now log in.');
@@ -51,10 +48,6 @@ export default function SignupScreen() {
         }
         setLoading(false);
     };
-
-    // To hide the nav bar, set headerShown: false in navigation config for this screen
-  // If using Expo Router, you can add: export const options = { headerShown: false, tabBarStyle: { display: 'none' } }
-  // Or for React Navigation: options={{ headerShown: false, tabBarStyle: { display: 'none' } }}
 
   return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' }}>
@@ -112,5 +105,4 @@ export default function SignupScreen() {
   );
 }
 
-// For Expo Router, you can add:
 export const options = { headerShown: false, tabBarStyle: { display: 'none' } };

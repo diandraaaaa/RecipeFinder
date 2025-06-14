@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, ActivityIndicator, SafeAreaView, TouchableOpacity, Image } from 'react-native';
-import { Feather, FontAwesome } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 import SearchBar from '@/components/SearchBar';
 import RecipeCard from '@/components/RecipeCard';
 import { Recipe } from '@/interfaces/interfaces';

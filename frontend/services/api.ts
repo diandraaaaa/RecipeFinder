@@ -3,7 +3,6 @@ import { database } from '../lib/appwriteConfig';
 import { ID, Query } from 'react-native-appwrite';
 
 export const fetchRecipes = async (params: Record<string, string> = {}) => {
-    // Build URL with query params if provided
     const url = new URL(`${BACKEND_URL}/recipes`);
     Object.entries(params).forEach(([key, val]) => {
         if (val) url.searchParams.append(key, val);
